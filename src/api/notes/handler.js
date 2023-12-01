@@ -3,6 +3,7 @@ class NotesHandler {
     this._service = service;
 
     this.postNoteHandler = this.postNoteHandler.bind(this);
+    this.getNoteHandler = this.getNoteHandler.bind(this);
     this.getNoteByIdHandler = this.getNoteByIdHandler.bind(this);
     this.putNoteByIdHandler = this.putNoteByIdHandler.bind(this);
     this.deleteNoteByIdHandler = this.deleteNoteByIdHandler.bind(this);
@@ -29,6 +30,32 @@ class NotesHandler {
         message: error.message,
       });
       response.code(400);
+      return response;
+    }
+  }
+  getNoteHandler(request, h) {
+    try {
+      const notes = this._service.getNotes();
+      return {
+        status: 'success',
+        data: {
+          notes,
+        },
+      };
+    } catch (error) {
+      const response = h.response({
+        status: 'fail',
+        message: error.message,
+      });
+      response.code(500); 
+  
+      response.data = {
+        error: {
+          code: 500,
+          message: 'Internal Server Error',
+        },
+      };
+  
       return response;
     }
   }
